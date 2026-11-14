@@ -1,9 +1,14 @@
-name: Monthly YouTube data refresh
+name: YouTube data refresh
 
 on:
   schedule:
     - cron: "0 4 1 * *"
   workflow_dispatch:
+    inputs:
+      full:
+        description: "Full refresh (refetch every channel). The monthly run always does this."
+        type: boolean
+        default: false
 
 permissions:
   contents: write
@@ -23,16 +28,36 @@ jobs:
         with:
           python-version: "3.12"
 
+      - name: Restore cached YouTube data
+        uses: actions/cache/restore@v4
+        with:
+          path: data/raw
+          key: raw-${{ github.run_id }}
+          restore-keys: raw-
+
       - name: Fetch channels, Reddit videos and interviews (YouTube Data API)
         env:
           YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
-        run: python pipeline/yt_api.py all --force
+        run: |
+          if [ "${{ github.event_name }}" = "schedule" ] || [ "${{ inputs.full }}" = "true" ]; then
+            python pipeline/yt_api.py all --force
+          else
+            python pipeline/yt_api.py all
+          fi
 
-      - name: Build site data
+      - name: Save YouTube data cache
+        if: always()
+        uses: actions/cache/save@v4
+        with:
+          path: data/raw
+          key: raw-${{ github.run_id }}
+
+      - name: Build site
         env:
           ASO_OUT: "."
         run: |
           python pipeline/build_data.py --public
+          cp site_src/index.html index.html
           rm -f aso-tube-data.zip
           zip -qj aso-tube-data.zip videos.json pipeline/*.py pipeline/*.json
 
@@ -40,5 +65,5 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add videos.json aso-tube-data.zip
-          git diff --cached --quiet || { git commit -m "Monthly data refresh"; git push; }
+          git add index.html videos.json aso-tube-data.zip
+          git diff --cached --quiet || { git commit -m "YouTube data refresh"; git push; }

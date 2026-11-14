@@ -289,5 +289,133 @@
   "id": "UC0069M4cnyghSALyk-qTL6A",
   "name": "Gavin Holmes (TradeGuider)",
   "scope": "ta"
+ },
+ {
+  "id": "UCAeAB8ABXGoGMbXuYPmiu2A",
+  "name": "The Swedish Investor",
+  "scope": "fa",
+  "exclude": [
+   "personal"
+  ]
+ },
+ {
+  "id": "UCSglJMvX-zSgv3PEJIE_inw",
+  "name": "Learn to Invest - Investors Grow",
+  "scope": "fa",
+  "exclude": [
+   "personal"
+  ]
+ },
+ {
+  "id": "UCA8P3Rgfjn0IFZL4bmrKbrg",
+  "name": "Rule #1 Investing",
+  "scope": "fa",
+  "exclude": [
+   "personal"
+  ]
+ },
+ {
+  "id": "UCxUxD8PSFN_JofKFMRGz4hA",
+  "name": "Compounding Quality",
+  "scope": "fa",
+  "exclude": [
+   "personal"
+  ]
+ },
+ {
+  "id": "UCODr9HUJ90xtWD-0Xoz4vPw",
+  "name": "Hamish Hodder",
+  "scope": "fa",
+  "exclude": [
+   "personal"
+  ]
+ },
+ {
+  "id": "UCs60_Z83HU76uygzHRQl0kA",
+  "name": "Brian Feroldi",
+  "scope": "fa",
+  "exclude": [
+   "personal"
+  ]
+ },
+ {
+  "id": "UChub1tZZuWn9YYHJZZYTbMg",
+  "name": "Morningstar, Inc.",
+  "scope": "fa",
+  "exclude": [
+   "personal"
+  ]
+ },
+ {
+  "id": "UCGtbVv_ACgV7difdVZ92NMw",
+  "name": "Corporate Finance Institute",
+  "scope": "fa",
+  "exclude": [
+   "personal"
+  ]
+ },
+ {
+  "id": "UCkHdBeQ4DuvBXTahMYZVlMA",
+  "name": "Kenji Explains",
+  "scope": "fa",
+  "exclude": [
+   "personal"
+  ]
+ },
+ {
+  "id": "UCQQJnyU8fALcOqqpyyIN4sg",
+  "name": "The Finance Storyteller",
+  "scope": "fa",
+  "exclude": [
+   "personal"
+  ]
+ },
+ {
+  "id": "UCvwFhI0mrIWDiZUabRapS5Q",
+  "name": "Investopedia",
+  "scope": "fa",
+  "exclude": [
+   "personal"
+  ]
+ },
+ {
+  "id": "UCCQEbqDL8i40d83Au55lYMQ",
+  "name": "Jacob Clifford",
+  "scope": "fa",
+  "exclude": [
+   "personal"
+  ]
+ },
+ {
+  "id": "UCe83jLdZ3PuqVwAHe6B3U2A",
+  "name": "tutor2u",
+  "scope": "fa",
+  "exclude": [
+   "personal"
+  ]
+ },
+ {
+  "id": "UCWo4IA01TXzBeGJJKWHOG9g",
+  "name": "Harvard Business Review",
+  "scope": "fa",
+  "exclude": [
+   "personal"
+  ]
+ },
+ {
+  "id": "UCvPWBVQS3m1KtXJaLKijn4Q",
+  "name": "Business School 101",
+  "scope": "fa",
+  "exclude": [
+   "personal"
+  ]
+ },
+ {
+  "id": "UC3GIh1bwXMPG-YISVNm5xrA",
+  "name": "Value Investors Archive",
+  "scope": "fa",
+  "exclude": [
+   "personal"
+  ]
  }
 ]

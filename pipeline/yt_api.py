@@ -5,7 +5,7 @@ Writes the same files the yt-dlp fetchers wrote, so build_data.py is unchanged.
 
   python3 pipeline/yt_api.py channels [--force]   all channels in channels.json (~3,000 units)
   python3 pipeline/yt_api.py reddit               videos linked on Reddit (~30 units)
-  python3 pipeline/yt_api.py interviews           one search per figure (~5,300 units, resumable)
+  python3 pipeline/yt_api.py interviews           one search per new figure (100 units each); with --force, refresh known interviews' metadata cheaply
   python3 pipeline/yt_api.py all
 """
 import json, os, re, sys, time, urllib.error, urllib.parse, urllib.request
@@ -152,17 +152,19 @@ def cmd_reddit():
     print(f"Reddit videos: {len(meta)} with metadata ({units} units used)", flush=True)
 
 
-def cmd_interviews():
+def cmd_interviews(force=False):
     figs = json.loads((ROOT / "pipeline" / "figures.json").read_text())
     path = RAW / "interviews_search.jsonl"
-    done = set()
-    if path.exists():
-        done = {json.loads(l)["figure"] for l in path.open() if '"api": true' in l}
-    else:
-        path.touch()
-    if not done:
-        path.write_text("")
-    with path.open("a") as f:
+    rows = [json.loads(l) for l in path.open() if '"api": true' in l] if path.exists() else []
+    if force and rows:
+        fresh = video_meta([r["id"] for r in rows])
+        rows = [{**slim(fresh[r["id"]]), "channel": fresh[r["id"]]["channel"], "channel_id": fresh[r["id"]]["channel_id"],
+                 "figure": r["figure"], "api": True} for r in rows if r["id"] in fresh]
+        print(f"refreshed metadata for {len(rows)} interview videos ({units} units used)", flush=True)
+    done = {r["figure"] for r in rows}
+    with path.open("w") as f:
+        for r in rows:
+            f.write(json.dumps(r) + "\n")
         for name, _, _ in figs:
             if name in done:
                 continue
@@ -185,7 +187,7 @@ if __name__ == "__main__":
         if what in ("reddit", "all"):
             cmd_reddit()
         if what in ("interviews", "all"):
-            cmd_interviews()
+            cmd_interviews(force)
     except QuotaExceeded:
         sys.exit(f"Daily YouTube API quota used up after {units} units. Run the same command again tomorrow; finished channels are skipped.")
     print(f"DONE ({units} units used)", flush=True)

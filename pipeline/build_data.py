@@ -24,6 +24,28 @@ TOPICS = [
     ("EXAM", "Exam & Career", r"\bexam\b|\bstudy\b|calculator|ba ?ii|ti-?84|hp ?12c|prep(aration)?\b|first attempt|how i (teach|cleared|passed|studied)|cleared|replace the cfa|future of (the )?cfa|which is right|study (plan|tips|strategy|schedule|guide)|pass rate|results?\b|mock|how (i|to) pass|motivation|journey|worth it|\bvs\.?\b|career|salary|jobs?\b|interview|constructed response|essay|formula sheet|formulas|revision|cheat sheet|last minute|q&a|question bank|practice (questions|problems)|tips|curriculum (changes|update)|registration|charter|day in the life|advice|failed|passed"),
 ]
 TOPIC_RE = [(k, n, re.compile(p, re.I)) for k, n, p in TOPICS]
+FA_SUBS = [
+    ("VALUE", "Value investing", r"value investing|value investor|benjamin graham|\bgraham\b|margin of safety|intrinsic value|deep value|net[- ]nets?|book value|value traps?|contrarian|mr\.? market|security analysis|intelligent investor|value stocks?|cigar butt|owner earnings|buffett|munger|berkshire|klarman|pabrai|greenblatt|magic formula|undervalued companies|stock market wisdom"),
+    ("GROWTH", "Growth investing", r"growth investing|growth investor|growth stocks?|growth compan|growth portfolio|investing in growth|growth at a reasonable price|philip fisher|scuttlebutt|one up on wall street|peter lynch|\bpeg\b|ten-?baggers?|100-?baggers?|compounders?|compounding machines?|quality (investing|stocks|companies|growth)|total addressable market|\btam\b|high[- ]growth|rule of 40|saas metrics|unit economics|disruptive innovation|founder[- ]led|small caps? growth|garp"),
+    ("VAL", "Valuation", r"valuation|valuing|value a (stock|company|business)|\bdcf\b|discounted cash flow|free cash flow|\bfcf\b|multiples|ev/ebitda|enterprise value|\bp/?e ratio|price[- ]to[- ](earnings|book|sales)|cost of capital|\bwacc\b|terminal value|reverse dcf|sum of the parts|damodaran|financial model(l)?ing|\blbo\b|comparable compan|precedent transactions|equity research"),
+    ("FS", "Financial statements", r"financial statements?|income statement|balance sheet|cash flow statement|statement of cash flows|\b10-?k\b|\b10-?q\b|annual report|accounting|ratio analysis|financial ratios|earnings quality|quality of earnings|forensic|accounting red flags|\bgaap\b|\bifrs\b|return on (equity|invested capital|capital|assets)|\broic\b|\broce\b|\broe\b|gross margin|operating margin|working capital|depreciation|amortization|ebitda|how to read (a |an )?(10-k|annual report|balance sheet|income statement|financial statements)|debits? (and|&) credits?|revenue recognition"),
+    ("ECON", "Economics & macro", r"econom|macro|inflation|interest rates?|the fed\b|federal reserve|central bank|recession|business cycle|\bgdp\b|monetary polic|fiscal polic|debt cycle|yield curve|currenc|exchange rate|bond market|liquidity|unemployment|deflation|stagflation|trade (war|deficit)|tariffs?|supply and demand|elasticity|keynes|hayek|money supply|quantitative easing|productivity"),
+    ("COMP", "Industry & competition", r"porter|five forces|competitive (advantage|strategy|position|dynamics|edge)|economic moats?|\bmoats?\b|industry analysis|industry structure|business models?|network effects?|switching costs|pricing power|barriers to entry|value chain|disruption|market share|differentiation|cost leadership|blue ocean|platform business|competitive landscape|(business|corporate|competitive) strategy|strategy of (amazon|apple|costco|walmart|netflix|google|microsoft)"),
+    ("PORT", "Portfolio & risk", r"portfolio|asset allocation|diversification|risk management|position sizing|behavio(u)?ral|biases|index funds?|passive investing|factor investing|rebalanc|sharpe|drawdowns?|kelly criterion|modern portfolio theory|efficient frontier|risk (and|&) return|volatility|hedging|options strategy|bonds? vs\.? stocks|retirement|dollar cost averaging"),
+    ("INT", "Investor interviews", r"(?!x)x"),
+]
+FA_RE = [(k, re.compile(p, re.I)) for k, _, p in FA_SUBS]
+FA_IDX = {k: i + 1 for i, (k, _, _) in enumerate(FA_SUBS)}
+FA_PRIORITY = ["COMP", "FS", "VAL", "VALUE", "GROWTH", "ECON", "PORT"]
+TP_TO_FA = {"FSA": "FS", "ECO": "ECON", "PM": "PORT", "PW": "PORT"}
+FA_NOISE = re.compile(r"managerial accounting|cost accounting|costs? of quality|process costing|job[- ]order costing|budget(ing|s)?\b|\btax(es|ation)?\b|\birs\b|s corporation|partnership basis|audit(ing|or)?\b|cpa exam|journal entr|payroll|bookkeeping|nonprofit|governmental accounting|accounting major|excel (tips|tutorial|shortcuts)", re.I)
+FA_PICK = re.compile(r"is \w+ (stock )?a (buy|sell)|stocks? (to|i'?m) buy|buy (now|or sell)|undervalued stocks? (to|for)|my (portfolio|dividend portfolio|stock portfolio)|portfolio update|i (just )?(bought|sold)|i'?m (buying|selling)|top \d+ stocks|\bearnings (reaction|recap|call)\b|\$[A-Z]{1,5}\b|stock analysis:|price target|#shorts|live ?stream|\blive\b|stocks? (crash|soar|plunge|surge)|this week in|news roundup|market update|\b\d+\s+[\w\- ]{0,30}?(stocks|funds|etfs|picks|reits)\b|to consider|worth a look|is cheap|still compelling|on sale|bargains?\b|buy and hold\b|best (stocks|funds|etfs)|dividend stocks|stock picks?|fund picks", re.I)
+
+
+def fa_of(text, pl_text):
+    sc = {k: 2 * len(rx.findall(text)) + len(rx.findall(pl_text)) for k, rx in FA_RE}
+    best = max(FA_PRIORITY, key=lambda k: (sc[k], -FA_PRIORITY.index(k)))
+    return FA_IDX[best] if sc[best] else 0
 TA_SUBS = [
     ("CANSLIM", "CANSLIM & growth stocks", r"canslim|can slim|o'?neil|cup (with|and|w/) ?handle|follow[- ]through day|distribution days?|\bftd\b|leaderboard|ibd 50|\brs rating|composite rating|minervini|\bvcp\b|volatility contraction|\bsepa\b|trend template|stage (analysis|[1-4])\b|weinstein|super ?performance|growth stocks?|base (count|pattern|breakout)|flat base|pivot (point|buy)|buy points?|market ?school|marketsmith|leadership stocks?|power play|high tight flag|market leaders"),
     ("CYC", "Cycles", r"cycles?\b|hurst|seasonal|presidential (cycle|election)|election year|midterm|decennial|elliott wave|kondratie|kitchin|juglar|\bgann\b|market timing|santa claus rally|sell in may|benner"),
@@ -256,9 +278,9 @@ def main():
         if fi is not None:
             if fkind == "trader":
                 out_videos.append({**v, "tp": "TA", "lv": 0, "r": authors, "rc": rc, "q": top_quotes(red), "hi": 1 if DEVANAGARI.search(text) else 0,
-                                   "ta": [t[0] for t in TA_SUBS].index("INT") + 1, "only": 1, "fig": fi + 1})
+                                   "ta": [t[0] for t in TA_SUBS].index("INT") + 1, "only": 1, "fig": fi + 1, "fa": 0, "cfa": 0})
             else:
-                out_videos.append({**v, "tp": "INT", "lv": 0, "r": authors, "rc": rc, "q": top_quotes(red), "hi": 1 if DEVANAGARI.search(text) else 0, "ta": 0, "only": 0, "fig": fi + 1})
+                out_videos.append({**v, "tp": "INT", "lv": 0, "r": authors, "rc": rc, "q": top_quotes(red), "hi": 1 if DEVANAGARI.search(text) else 0, "ta": 0, "only": 0, "fig": fi + 1, "fa": FA_IDX["INT"], "cfa": 0})
             continue
         if v["scope"] == "iv":
             dropped["iv-not-interview"] += 1
@@ -285,7 +307,18 @@ def main():
                 dropped["ta-offtopic"] += 1
                 continue
             out_videos.append({**v, "tp": "TA", "lv": 0, "r": authors, "rc": rc, "q": top_quotes(red), "hi": 1 if DEVANAGARI.search(text) else 0,
-                               "ta": ta or [t[0] for t in TA_SUBS].index(TA_PRIORITY[-1]) + 1, "only": 1, "fig": 0})
+                               "ta": ta or [t[0] for t in TA_SUBS].index(TA_PRIORITY[-1]) + 1, "only": 1, "fig": 0, "fa": 0, "cfa": 0})
+            continue
+        if scope == "fa":
+            if FA_NOISE.search(text) or (FA_PICK.search(text) and not TA_EDU.search(text) and not authors):
+                dropped["fa-stock-pick"] += 1
+                continue
+            fa = fa_of(text, pl_text)
+            if not fa:
+                dropped["fa-offtopic"] += 1
+                continue
+            out_videos.append({**v, "tp": "GEN", "lv": 0, "r": authors, "rc": rc, "q": top_quotes(red), "hi": 1 if DEVANAGARI.search(text) else 0,
+                               "ta": 0, "only": 0, "fig": 0, "fa": fa, "cfa": 0})
             continue
         tp = topic_of(text, pl_text)
         if not tp and CFA_RE.search(both):
@@ -306,8 +339,17 @@ def main():
         if scope == "community" and not (CFA_RE.search(both) or tp):
             dropped["community-offtopic"] += 1
             continue
+        cfa = 1 if (scope == "cfa" or CFA_RE.search(both) or lv) else 0
+        exam_meta = re.search(r"\bexam\b|study|registration|candidates?|pass(ed|ing)?\b|results?\b|level [123i]+ (now|is)|curriculum|mock|deferr", text, re.I)
+        fa = (fa_of(text, pl_text) if tp not in ("EXAM", "GEN", "ETH", None) and not exam_meta else 0) if cfa else (fa_of(text, pl_text) or FA_IDX.get(TP_TO_FA.get(tp or ""), 0))
+        if VARIANT == "public" and not cfa and (FA_NOISE.search(text) or (FA_PICK.search(text) and not TA_EDU.search(text) and not authors)):
+            fa = 0
+        if VARIANT == "public" and not cfa and not fa and tp != "TA":
+            dropped["fin-offtopic"] += 1
+            continue
         out_videos.append({**v, "tp": tp or "GEN", "lv": lv, "r": authors, "rc": rc, "q": top_quotes(red),
-                           "hi": 1 if DEVANAGARI.search(text) else 0, "ta": (ta_of(text, pl_text) or [t[0] for t in TA_SUBS].index(TA_PRIORITY[-1]) + 1) if tp == "TA" else 0, "only": 0, "fig": 0})
+                           "hi": 1 if DEVANAGARI.search(text) else 0, "ta": (ta_of(text, pl_text) or [t[0] for t in TA_SUBS].index(TA_PRIORITY[-1]) + 1) if tp == "TA" else 0, "only": 0, "fig": 0,
+                           "fa": fa, "cfa": cfa})
 
     used_ch = {v["c"] for v in out_videos}
     ch_videos = Counter(v["c"] for v in out_videos)
@@ -350,7 +392,7 @@ def main():
     out_videos.sort(key=lambda v: (-v["r"], -(v["views"] or 0)))
     vidx = {v["id"]: i for i, v in enumerate(out_videos)}
     rows = [[v["id"], v["t"], remap[v["c"]], int(v["d"] or 0), int(v["views"] or 0), int(v["ts"] or 0),
-             v["lv"], tkeys.index(v["tp"]), v["r"], v["hi"], v["ta"], v["only"], v["fig"], v["rc"]] for v in out_videos]
+             v["lv"], tkeys.index(v["tp"]), v["r"], v["hi"], v["ta"], v["only"], v["fig"], v["rc"], v["fa"], v["cfa"]] for v in out_videos]
     quotes = {v["id"]: v["q"] for v in out_videos if v["q"]}
 
     pls_out = []
@@ -373,8 +415,9 @@ def main():
     data = {"built": int(time.time()), "topics": [[t[0], t[1]] for t in TOPICS] + [["GEN", "General"]],
             "ta_subs": [[t[0], t[1]] for t in TA_SUBS],
             "figures": [[f[0], f[1]] for f in FIGURES],
+            "fa_subs": [[t[0], t[1]] for t in FA_SUBS],
             "channels": new_channels, "videos": rows, "playlists": pls_out, "quotes": quotes,
-            "fields": {"videos": ["id", "title", "channel", "duration", "views", "timestamp", "level", "topic", "reddit_recommenders", "hindi", "ta_subtopic", "ta_only", "figure", "rcfa_recommenders"],
+            "fields": {"videos": ["id", "title", "channel", "duration", "views", "timestamp", "level", "topic", "reddit_recommenders", "hindi", "ta_subtopic", "ta_only", "figure", "rcfa_recommenders", "fa_section", "in_cfa"],
                        "channels": ["id", "name", "handle", "subscribers", "tier", "scope", "reddit_recommenders", "videos"],
                        "playlists": ["id", "title", "channel", "level", "topic", "reddit_recommenders", "video_indexes", "ta_subtopic"]}}
     SITE.mkdir(exist_ok=True)
@@ -384,6 +427,7 @@ def main():
     print(f"videos {len(rows)} | channels {len(new_channels)} | playlists {len(pls_out)} | with r/CFA recs {sum(1 for r in rows if r[8])}")
     print("levels", dict(lv)); print("topics", dict(tp)); print("dropped", dict(dropped))
     print("tiers", Counter(c[4] for c in new_channels))
+    print("fa", Counter(FA_SUBS[r[14] - 1][0] for r in rows if r[14]), "cfa", sum(r[15] for r in rows))
     print("ta", Counter(TA_SUBS[r[10] - 1][0] for r in rows if r[10]), "ta-only", sum(r[11] for r in rows))
 
 
