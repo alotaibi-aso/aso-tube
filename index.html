@@ -62,6 +62,12 @@ img{max-width:100%;display:block}
 .ib svg,.search svg{width:21px;height:21px;fill:var(--fg)}
 .tvbtn{display:flex;align-items:center;gap:6px;height:36px;padding:0 14px;border-radius:18px;border:0;background:var(--accent);color:var(--accent-fg);font-weight:600;white-space:nowrap}
 .tvbtn svg{width:18px;height:18px;fill:currentColor}
+.xbtn{display:flex;align-items:center;gap:7px;height:36px;padding:0 13px;border-radius:18px;background:var(--fg);color:var(--bg);font-weight:600;font-size:14px;white-space:nowrap}
+.xbtn:hover{opacity:.88}
+.xbtn svg{width:15px;height:15px;fill:currentColor}
+.byline{display:inline-flex;align-items:center;gap:8px;margin:0 0 18px;font-size:14px;color:var(--fg2)}
+.byline a{display:inline-flex;align-items:center;gap:6px;color:var(--fg);font-weight:600;border-bottom:1.5px solid var(--accent)}
+.byline svg{width:13px;height:13px;fill:currentColor}
 .sun{display:none}
 :root[data-theme="dark"] .sun{display:block}:root[data-theme="dark"] .moon{display:none}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .sun{display:block}:root:not([data-theme="light"]) .moon{display:none}}
@@ -84,7 +90,7 @@ main{flex:1;min-width:0;padding-block:18px 60px;padding-left:max(16px,env(safe-a
   .rail a svg,.rail hr,.rail .fine{display:none}
   .shell{flex-direction:column}
 }
-@media (max-width:640px){.logo span{display:none}.tvbtn span{display:none}.tvbtn{padding:0 10px}.search button{width:46px}.top{gap:8px}}
+@media (max-width:640px){.logo span{display:none}.tvbtn span{display:none}.xbtn span{display:none}.xbtn{padding:0 11px}.tvbtn{padding:0 10px}.search button{width:46px}.top{gap:8px}}
 
 /* filters */
 .filters{display:flex;flex-direction:column;gap:10px;margin-bottom:18px}
@@ -236,6 +242,7 @@ kbd{font:500 12px var(--mono);background:var(--bg3);border:1px solid var(--bg4);
   <a class="logo" href="#/" aria-label="ASO-Tube home"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="12" fill="var(--accent)"/><g fill="var(--accent-fg)"><rect x="6.3" y="9" width="2.4" height="7" rx=".6"/><rect x="7.1" y="7" width=".8" height="11"/><rect x="10.8" y="6.5" width="2.4" height="8" rx=".6"/><rect x="11.6" y="4.8" width=".8" height="12"/><rect x="15.3" y="10.5" width="2.4" height="5.5" rx=".6"/><rect x="16.1" y="8.6" width=".8" height="9.4"/></g></svg><span>ASO-<b>Tube</b></span></a>
   <form class="search" id="sf" role="search"><input id="q" type="search" placeholder="Search 'duration convexity', 'residual income', 'GIPS'…" autocomplete="off" aria-label="Search videos"><button aria-label="Search"><svg viewBox="0 0 24 24"><path d="M15.5 14h-.8l-.3-.3A6.5 6.5 0 1 0 9.5 16a6.5 6.5 0 0 0 4.2-1.6l.3.3v.8l5 5 1.5-1.5-5-5zm-6 0a4.5 4.5 0 1 1 0-9 4.5 4.5 0 0 1 0 9z"/></svg></button></form>
   <div class="icons">
+    <a class="xbtn" href="https://x.com/alotaibi_aso" target="_blank" rel="noopener" title="Follow @alotaibi_aso on X" aria-label="Follow @alotaibi_aso on X"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg><span>@alotaibi_aso</span></a>
     <button class="tvbtn" id="tvopen" title="TV mode (T)"><svg viewBox="0 0 24 24"><path d="M21 3H3a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h5v2h8v-2h5a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2zm0 14H3V5h18v12zM10 8v6l5-3z"/></svg><span>TV mode</span></button>
     <button class="ib" id="theme" title="Toggle dark mode" aria-label="Toggle dark mode"><svg class="moon" viewBox="0 0 24 24"><path d="M12 3a9 9 0 1 0 9 9c0-.5 0-.9-.1-1.4A5.5 5.5 0 0 1 13.4 3.1 9 9 0 0 0 12 3z"/></svg><svg class="sun" viewBox="0 0 24 24"><path d="M12 7a5 5 0 1 0 0 10 5 5 0 0 0 0-10zM11 1h2v3h-2zm0 19h2v3h-2zM3.5 4.9l1.4-1.4 2.1 2.1-1.4 1.4zM17 18.4l1.4-1.4 2.1 2.1-1.4 1.4zM1 11h3v2H1zm19 0h3v2h-3zM4.9 20.5l-1.4-1.4 2.1-2.1 1.4 1.4zM18.4 7 17 5.6l2.1-2.1 1.4 1.4z"/></svg></button>
   </div>
@@ -449,6 +456,7 @@ function chooser(app) {
   const mosaic = list => `<div class="mosaic">${top(list, 3).map(v => `<img loading="lazy" src="${thumb(v.id)}" onerror="${fallbackThumb}" alt="">`).join("")}</div>`;
   app.innerHTML = `<section class="choose">
     <h1 class="page">What do you want to study today?</h1>
+    <p class="byline">Built by <a href="https://x.com/alotaibi_aso" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>@alotaibi_aso</a> · follow on X for new additions</p>
     <p class="lede">Four libraries built from YouTube's best finance teachers, ranked by what CFA candidates and traders on Reddit actually recommend to each other.</p>
     <div class="doors">
       <a class="door" href="#/fa">${mosaic(fin)}<div class="dbody">
@@ -728,7 +736,7 @@ function about(app) {
     <li><b>Classify.</b> Every title, plus the names of the playlists it sits in, is matched against the CFA curriculum vocabulary to assign a Level (I, II, III) and one of the topic areas. Shorts, other certifications (FRM, CPA, ACCA, CA), and off-topic uploads from general finance channels were removed.</li>
     <li><b>Rank.</b> “For you” blends r/CFA recommendations, views, channel tier, and what you've watched in this browser. Thumbnails are a frame from the middle of each video rather than the uploader's clickbait thumbnail.</li>
   </ol>
-  <p>Inspired by Andrej Karpathy's HackerTube and TristanTube. The whole dataset is one file, <a href="videos.json">videos.json</a>. The pipeline code is in <a href="aso-tube-data.zip">aso-tube-data.zip</a>.</p>
+  <p>Built by <a href="https://x.com/alotaibi_aso" target="_blank" rel="noopener">@alotaibi_aso</a> on X. Inspired by Andrej Karpathy's HackerTube and TristanTube. The whole dataset is one file, <a href="videos.json">videos.json</a>. The pipeline code is in <a href="aso-tube-data.zip">aso-tube-data.zip</a>.</p>
   <h2>Technical Analysis section</h2>
   <p>The technical analysis library has eight sections: <b>CANSLIM</b> (O'Neil, IBD, Minervini, stage analysis), <b>Classical chart patterns</b> (Edwards and Magee, Peter Brandt), <b>Elliott Wave</b>, <b>Wyckoff &amp; VSA</b> (Wyckoff schematics, Tom Williams' Volume Spread Analysis), <b>Japanese candlesticks</b>, <b>Momentum trading</b>, <b>Market breadth</b> and <b>Indicators &amp; tools</b>. It is built the same way: channels found by YouTube search, ranked by how often traders on r/CANSLIM, r/technicalanalysis, r/swingtrading, r/Wyckoff and r/VSA link them, then sorted by keywords.</p>
   <h2>Interviews</h2>
