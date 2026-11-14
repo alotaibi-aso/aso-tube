@@ -41,6 +41,8 @@ jobs:
           YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
           MODE: ${{ inputs.mode || 'refresh' }}
         run: |
+          # The cache may hold an older copy of the committed Reddit snapshot; the repo's copy wins.
+          git checkout -- data/raw/reddit_ALL_comments_anon.jsonl
           if [ "$MODE" = "seed" ] || { [ "$MODE" != "full" ] && [ ! -d data/raw/channels ]; }; then
             python pipeline/seed_from_published.py
           fi
