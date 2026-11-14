@@ -7,6 +7,7 @@ Writes the same files the yt-dlp fetchers wrote, so build_data.py is unchanged.
   python3 pipeline/yt_api.py reddit               videos linked on Reddit (~30 units)
   python3 pipeline/yt_api.py interviews           one search per new figure (100 units each); with --force, refresh known interviews' metadata cheaply
   python3 pipeline/yt_api.py all
+  python3 pipeline/yt_api.py refresh              refresh stats of videos already in the library (~1,200 units)
 """
 import json, os, re, sys, time, urllib.error, urllib.parse, urllib.request
 from pathlib import Path
@@ -136,6 +137,31 @@ def cmd_channels(force):
         fetch_channel(ch, force)
 
 
+def cmd_refresh():
+    """Refresh metadata of videos already in the library; never adds new videos."""
+    files = sorted((RAW / "channels").glob("*.json"))
+    ids = set()
+    for f in files:
+        d = json.loads(f.read_text())
+        ids |= {v["id"] for v in d["videos"]} | {v["id"] for p in d["playlists"] for v in p["videos"]}
+    extra = [RAW / "reddit_videos_meta.jsonl", RAW / "interviews_search.jsonl"]
+    for f in extra:
+        if f.exists():
+            ids |= {json.loads(l)["id"] for l in f.open() if l.strip()}
+    fresh = video_meta(sorted(ids))
+    for f in files:
+        d = json.loads(f.read_text())
+        d["videos"] = [{**v, **slim(fresh[v["id"]])} for v in d["videos"] if v["id"] in fresh]
+        for p in d["playlists"]:
+            p["videos"] = [{**v, **slim(fresh[v["id"]])} for v in p["videos"] if v["id"] in fresh]
+        f.write_text(json.dumps(d))
+    for f in extra:
+        if f.exists():
+            rows = [json.loads(l) for l in f.open() if l.strip()]
+            f.write_text("".join(json.dumps({**r, **slim(fresh[r["id"]])}) + "\n" for r in rows if r["id"] in fresh))
+    print(f"refreshed {len(fresh)} of {len(ids)} videos; {len(ids) - len(fresh)} removed as deleted or private ({units} units used)", flush=True)
+
+
 def cmd_reddit():
     known = set()
     for f in (RAW / "channels").glob("*.json"):
@@ -182,6 +208,8 @@ if __name__ == "__main__":
     what = sys.argv[1] if len(sys.argv) > 1 else "all"
     force = "--force" in sys.argv
     try:
+        if what == "refresh":
+            cmd_refresh()
         if what in ("channels", "all"):
             cmd_channels(force)
         if what in ("reddit", "all"):

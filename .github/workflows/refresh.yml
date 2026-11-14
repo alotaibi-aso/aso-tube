@@ -1,14 +1,15 @@
-name: YouTube data refresh
+name: Library data refresh
 
 on:
   schedule:
     - cron: "0 4 1 * *"
   workflow_dispatch:
     inputs:
-      full:
-        description: "Full refresh (refetch every channel). The monthly run always does this."
-        type: boolean
-        default: false
+      mode:
+        description: "refresh = update stats of existing videos only (monthly default). add-channels = fetch channels added to channels.json. seed = rebuild from the published data, then add-channels. full = refetch everything."
+        type: choice
+        options: [refresh, add-channels, seed, full]
+        default: refresh
 
 permissions:
   contents: write
@@ -28,24 +29,30 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Restore cached YouTube data
+      - name: Restore cached library data
         uses: actions/cache/restore@v4
         with:
           path: data/raw
           key: raw-${{ github.run_id }}
           restore-keys: raw-
 
-      - name: Fetch channels, Reddit videos and interviews (YouTube Data API)
+      - name: Update library data (YouTube Data API)
         env:
           YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
+          MODE: ${{ inputs.mode || 'refresh' }}
         run: |
-          if [ "${{ github.event_name }}" = "schedule" ] || [ "${{ inputs.full }}" = "true" ]; then
-            python pipeline/yt_api.py all --force
-          else
-            python pipeline/yt_api.py all
+          if [ "$MODE" = "seed" ] || { [ "$MODE" != "full" ] && [ ! -d data/raw/channels ]; }; then
+            python pipeline/seed_from_published.py
           fi
+          case "$MODE" in
+            seed|add-channels) python pipeline/yt_api.py channels
+                               python pipeline/yt_api.py reddit ;;
+            full)              python pipeline/yt_api.py all --force ;;
+            *)                 [ -f data/raw/reddit_videos_meta.jsonl ] || python pipeline/yt_api.py reddit
+                               python pipeline/yt_api.py refresh ;;
+          esac
 
-      - name: Save YouTube data cache
+      - name: Save library data cache
         if: always()
         uses: actions/cache/save@v4
         with:
@@ -66,4 +73,4 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add index.html videos.json aso-tube-data.zip
-          git diff --cached --quiet || { git commit -m "YouTube data refresh"; git push; }
+          git diff --cached --quiet || { git commit -m "Library data refresh"; git push; }
