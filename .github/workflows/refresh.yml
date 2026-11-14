@@ -1,0 +1,44 @@
+name: Monthly YouTube data refresh
+
+on:
+  schedule:
+    - cron: "0 4 1 * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: refresh
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 150
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Fetch channels, Reddit videos and interviews (YouTube Data API)
+        env:
+          YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
+        run: python pipeline/yt_api.py all --force
+
+      - name: Build site data
+        env:
+          ASO_OUT: "."
+        run: |
+          python pipeline/build_data.py --public
+          rm -f aso-tube-data.zip
+          zip -qj aso-tube-data.zip videos.json pipeline/*.py pipeline/*.json
+
+      - name: Publish
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add videos.json aso-tube-data.zip
+          git diff --cached --quiet || { git commit -m "Monthly data refresh"; git push; }

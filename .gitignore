@@ -1,0 +1,4 @@
+data/raw/*
+!data/raw/reddit_ALL_comments_anon.jsonl
+__pycache__/
+.DS_Store
