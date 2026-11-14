@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>ASO-Tube</title>
-<meta name="description" content="The CFA exam videos that r/CFA keeps recommending, plus the best CFA channels, sorted by Level and topic.">
+<meta name="description" content="A free library of the most recommended finance videos on YouTube: financial analysis, CFA exam prep and technical analysis, sorted by Level and topic.">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><circle cx='12' cy='12' r='12' fill='%23d68a1c'/><g fill='white'><rect x='6.3' y='9' width='2.4' height='7' rx='.6'/><rect x='7.1' y='7' width='.8' height='11'/><rect x='10.8' y='6.5' width='2.4' height='8' rx='.6'/><rect x='11.6' y='4.8' width='.8' height='12'/><rect x='15.3' y='10.5' width='2.4' height='5.5' rx='.6'/><rect x='16.1' y='8.6' width='.8' height='9.4'/></g></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -254,7 +254,7 @@ kbd{font:500 12px var(--mono);background:var(--bg3);border:1px solid var(--bg4);
     <a href="#/" data-r="home"><svg viewBox="0 0 24 24"><path d="M12 3 2 11h3v9h6v-6h2v6h6v-9h3z"/></svg>Home</a>
     <a href="#/fa" data-r="fa"><svg viewBox="0 0 24 24"><path d="M4 19h16v2H4zM6 10h3v7H6zm5-4h3v11h-3zm5 2h3v9h-3z"/></svg>Financial analysis</a>
     <a href="#/cfa" data-r="cfa"><svg viewBox="0 0 24 24"><path d="M12 3 1 9l11 6 9-4.9V17h2V9zM5 13.2v4L12 21l7-3.8v-4L12 17z"/></svg>CFA exam prep</a>
-    <a href="#/picks" data-r="picks"><svg viewBox="0 0 24 24"><path d="M4 4h16v12H7l-3 3zm4 5v2h8V9zm0 3v2h5v-2z"/></svg>r/CFA picks</a>
+    <a href="#/picks" data-r="picks"><svg viewBox="0 0 24 24"><path d="M4 4h16v12H7l-3 3zm4 5v2h8V9zm0 3v2h5v-2z"/></svg>Top CFA picks</a>
     <a href="#/ta" data-r="ta"><svg viewBox="0 0 24 24"><path d="M3 20h18v2H3zM5 17l4-6 4 3 5-8 2 1.3-6.2 9.7-4-3L6.7 18z"/></svg>Technical Analysis</a>
     <a href="#/interviews" data-r="interviews"><svg viewBox="0 0 24 24"><path d="M12 14a3 3 0 0 0 3-3V5a3 3 0 0 0-6 0v6a3 3 0 0 0 3 3zm5-3a5 5 0 0 1-10 0H5a7 7 0 0 0 6 6.9V21h2v-3.1a7 7 0 0 0 6-6.9z"/></svg>Interviews</a>
     <a href="#/courses" data-r="courses"><svg viewBox="0 0 24 24"><path d="M4 6h12v2H4zm0 4h12v2H4zm0 4h8v2H4zm12 0v6l5-3z"/></svg>Courses</a>
@@ -357,7 +357,7 @@ function filtered(o = st) {
 }
 
 /* ---------- components ---------- */
-const tierBadge = c => c.tier === "I" ? "" : `<span class="tier ${c.tier}" title="Tier ${c.tier === "R" ? "r/CFA find" : c.tier}">${c.tier === "R" ? "r/" : c.tier}</span>`;
+const tierBadge = c => c.tier === "I" ? "" : `<span class="tier ${c.tier}" title="Tier ${c.tier === "R" ? "community find" : c.tier}">${c.tier === "R" ? "★" : c.tier}</span>`;
 function tags(v) {
   let s = "";
   if (v.lv) s += `<span class="tag l${v.lv}">${LV[v.lv]}</span>`;
@@ -365,8 +365,7 @@ function tags(v) {
   else if (v.ta) s += `<span class="tag ta">${esc(TAS[v.ta - 1].n)}</span>`;
   else if (!v.cfa && v.fa) s += `<span class="tag">${esc(FAS[v.fa - 1].n)}</span>`;
   else if (v.tp !== GEN) s += `<span class="tag">${esc(TOP[v.tp].n)}</span>`;
-  if (v.rc) s += `<span class="tag rc" title="Recommended by ${v.rc} different r/CFA users">r/CFA ×${v.rc}</span>`;
-  else if (v.r) s += `<span class="tag rc" title="Recommended by ${v.r} different Reddit users">Reddit ×${v.r}</span>`;
+  if (v.r) s += `<span class="tag rc" title="Recommended by ${v.r} different people">Recommended ×${v.r}</span>`;
   return s;
 }
 function card(v, href) {
@@ -385,7 +384,7 @@ function rowItem(v, href, cur, num) {
 function pcard(p) {
   const f = p.v[0];
   return `<a class="card pcard" href="#/p/${p.id}"><div class="thumb" data-n="${p.v.length} videos"><img loading="lazy" src="${thumb(f.id)}" onerror="${fallbackThumb}" alt=""></div>
-  <div class="meta"><h3>${esc(p.t)}</h3><div class="sub">${esc(CH[p.c].n)} ${tierBadge(CH[p.c])}</div><div class="tags">${p.lv ? `<span class="tag l${p.lv}">${LV[p.lv]}</span>` : ""}${p.tp !== GEN ? `<span class="tag">${esc(TOP[p.tp].n)}</span>` : ""}${p.r ? `<span class="tag rc">r/CFA ×${p.r}</span>` : ""}</div></div></a>`;
+  <div class="meta"><h3>${esc(p.t)}</h3><div class="sub">${esc(CH[p.c].n)} ${tierBadge(CH[p.c])}</div><div class="tags">${p.lv ? `<span class="tag l${p.lv}">${LV[p.lv]}</span>` : ""}${p.tp !== GEN ? `<span class="tag">${esc(TOP[p.tp].n)}</span>` : ""}${p.r ? `<span class="tag rc">Recommended ×${p.r}</span>` : ""}</div></div></a>`;
 }
 let pager = null;
 function paged(el, list, render = card, step = 48) {
@@ -401,7 +400,7 @@ function filterBar(o, opts = {}) {
   const topics = TOP.filter(t => t.k !== "GEN" && t.k !== "INT");
   return `<div class="filters">
     <div class="row"><div class="seg" role="group" aria-label="Level">${[0, 1, 2, 3].map(l => `<button data-lv="${l}" class="${o.level === l ? "on" : ""}">${l ? LV[l] : "All levels"}</button>`).join("")}</div>
-    ${opts.sort ? `<select id="sort" aria-label="Sort">${[["foryou", "For you"], ["recs", "Most recommended on r/CFA"], ["views", "Most viewed"], ["new", "Newest"], ["short", "Shortest first"], ["long", "Longest first"]].map(([k, n]) => `<option value="${k}" ${o.sort === k ? "selected" : ""}>${n}</option>`).join("")}</select>` : ""}
+    ${opts.sort ? `<select id="sort" aria-label="Sort">${[["foryou", "For you"], ["recs", "Most recommended"], ["views", "Most viewed"], ["new", "Newest"], ["short", "Shortest first"], ["long", "Longest first"]].map(([k, n]) => `<option value="${k}" ${o.sort === k ? "selected" : ""}>${n}</option>`).join("")}</select>` : ""}
     <label class="tog"><input type="checkbox" id="hidehi" ${o.hideHi ? "checked" : ""}> Hide Hindi-language titles</label>
     <span class="count mono" id="count"></span></div>
     <div class="chips" role="group" aria-label="Topic"><button class="chip ${!o.topic ? "on" : ""}" data-tp="">All topics</button>${topics.map(t => `<button class="chip ${o.topic === t.k ? "on" : ""}" data-tp="${t.k}">${esc(t.n)}${w[t.k] ? `<span class="w">${w[t.k]}</span>` : ""}</button>`).join("")}</div>
@@ -438,7 +437,7 @@ function home(app) {
     const picks = V.filter(v => v.rc >= 2 && v.cfa && !seenSet.has(v.id)).sort((a, b) => b.rc - a.rc).slice(0, 12);
     const courses = PL.filter(p => p.v.filter(v => v.cfa).length >= p.v.length / 2).slice(0, 12);
     app.innerHTML = `<p class="crumb"><a href="#/fa">Financial analysis</a> › CFA exam prep</p><h1 class="page">CFA® exam prep</h1>${filterBar(st, {sort: true})}
-      ${showShelves && picks.length ? `<h2 class="shelf">Most recommended on r/CFA <a href="#/picks">See all</a></h2><div class="strip">${picks.map(v => card(v)).join("")}</div>` : ""}
+      ${showShelves && picks.length ? `<h2 class="shelf">Most recommended <a href="#/picks">See all</a></h2><div class="strip">${picks.map(v => card(v)).join("")}</div>` : ""}
       ${showShelves && courses.length ? `<h2 class="shelf">Full courses <a href="#/courses">See all</a></h2><div class="strip">${courses.map(pcard).join("")}</div>` : ""}
       ${showShelves ? `<h2 class="shelf">${p ? "Picked for you from your watch history" : "Picked for you"}</h2>` : ""}
       <div class="grid" id="grid"></div>${list.length ? "" : `<div class="empty">No videos match these filters.</div>`}`;
@@ -459,19 +458,19 @@ function chooser(app) {
   app.innerHTML = `<section class="choose">
     <h1 class="page">What do you want to study today?</h1>
     <p class="byline">Built by <a href="https://x.com/alotaibi_aso" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>@alotaibi_aso</a> · follow on X for new additions</p>
-    <p class="lede">Four libraries built from YouTube's best finance teachers, ranked by what CFA candidates and traders on Reddit actually recommend to each other.</p>
+    <p class="lede">Four libraries built from YouTube's best finance teachers, ranked by what candidates, investors and traders actually recommend to each other.</p>
     <div class="doors">
       <a class="door" href="#/fa">${mosaic(fin)}<div class="dbody">
         <span class="eyebrow">Financial analysis</span><h2>Value, growth, valuation and the CFA</h2>
         <p>Equity investing from the fundamentals up: reading financial statements, valuing a business, judging its competitive position, the economy around it, and the full CFA® curriculum.</p>
         <div class="dchips">${FAS.filter(t => t.k !== "INT").map(t => `<span>${esc(t.n)}</span>`).join("")}<span>CFA® exam prep</span></div>
-        <div class="dstats mono">${fin.length.toLocaleString()} videos · ${fin.filter(v => v.r).length} recommended on Reddit</div>
+        <div class="dstats mono">${fin.length.toLocaleString()} videos · ${fin.filter(v => v.r).length} community picks</div>
         <span class="btn pri">Enter financial analysis</span></div></a>
       <a class="door" href="#/ta">${mosaic(ta)}<div class="dbody">
         <span class="eyebrow">Technical analysis</span><h2>Charts, patterns and market timing</h2>
         <p>From O'Neil's CANSLIM to Elliott Wave and Wyckoff, each school in its own section.</p>
         <div class="dchips">${TAS.filter(t => t.k !== "INT").map(t => `<span>${esc(t.n)}</span>`).join("")}</div>
-        <div class="dstats mono">${ta.length.toLocaleString()} videos · ${ta.filter(v => v.r).length} recommended on trading subreddits</div>
+        <div class="dstats mono">${ta.length.toLocaleString()} videos · ${ta.filter(v => v.r).length} community picks</div>
         <span class="btn pri">Enter TA library</span></div></a>
       <a class="door" href="#/interviews/investor">${mosaic(ivInv)}<div class="dbody">
         <span class="eyebrow">Financial analysis · interviews</span><h2>Investor interviews</h2>
@@ -492,14 +491,10 @@ function chooser(app) {
 function picks(app) {
   const list = V.filter(v => v.rc && !v.only).sort((a, b) => b.rc - a.rc || b.v - a.v);
   ctxQueue = () => list;
-  app.innerHTML = `<h1 class="page">What r/CFA keeps recommending</h1>
-  <p class="lede">Every YouTube link posted in an r/CFA comment since 2014, counted by how many <em>different</em> people shared it. ${list.length.toLocaleString()} videos were recommended at least once. The number is distinct recommenders, so one enthusiastic poster can't inflate it.</p>
-  <div id="pl"></div>`;
-  const D2 = D.quotes;
-  paged($("#pl"), list, v => {
-    const q = (D2[v.id] || [])[0];
-    return `<div class="pickrow"><div class="rank">${v.rc}<div class="sub" style="font:500 11px var(--body);justify-content:flex-end">people</div></div>${card(v)}<div>${q ? `<div class="q">“${esc(q[0])}” <a href="${esc(q[1])}" target="_blank" rel="noopener">thread ↗</a></div>` : ""}</div></div>`;
-  }, 30);
+  app.innerHTML = `<p class="crumb"><a href="#/cfa">CFA® exam prep</a> › Top picks</p><h1 class="page">Top CFA picks</h1>
+  <p class="lede">The CFA videos that candidates recommend to each other most often, counted by how many <em>different</em> people recommended each one. ${list.length.toLocaleString()} videos were recommended at least once.</p>
+  <div class="grid" id="pl"></div>`;
+  paged($("#pl"), list);
 }
 
 const TA_BLURB = {
@@ -522,11 +517,11 @@ function taPage(app) {
     const recs = list.filter(v => v.r).sort((a, b) => b.r - a.r).slice(0, 12);
     const pls = PL.filter(p => p.tp === TAI && (!si || p.ta === si || p.v.filter(v => v.ta === si).length >= Math.min(3, p.v.length)));
     app.innerHTML = `<h1 class="page">Technical Analysis</h1>
-      <p class="lede">${taSt.sub ? esc(TA_BLURB[taSt.sub]) : "CANSLIM, classical chart patterns, Elliott Wave, Wyckoff and VSA, candlesticks, momentum and market breadth, from the channels traders on r/CANSLIM, r/technicalanalysis, r/swingtrading, r/Wyckoff and r/VSA point to."}</p>
-      <div class="filters"><div class="row"><select id="tasort" aria-label="Sort">${[["foryou", "For you"], ["recs", "Most recommended on Reddit"], ["views", "Most viewed"], ["new", "Newest"], ["short", "Shortest first"], ["long", "Longest first"]].map(([k, n]) => `<option value="${k}" ${taSt.sort === k ? "selected" : ""}>${n}</option>`).join("")}</select>
+      <p class="lede">${taSt.sub ? esc(TA_BLURB[taSt.sub]) : "CANSLIM, classical chart patterns, Elliott Wave, Wyckoff and VSA, candlesticks, momentum and market breadth, from the channels traders recommend most."}</p>
+      <div class="filters"><div class="row"><select id="tasort" aria-label="Sort">${[["foryou", "For you"], ["recs", "Most recommended"], ["views", "Most viewed"], ["new", "Newest"], ["short", "Shortest first"], ["long", "Longest first"]].map(([k, n]) => `<option value="${k}" ${taSt.sort === k ? "selected" : ""}>${n}</option>`).join("")}</select>
         <button class="btn pri" id="tvta">TV mode: ${esc(taSt.sub ? TAS[si - 1].n : "Technical Analysis")}</button><span class="count mono">${list.length.toLocaleString()} videos</span></div>
         <div class="chips" role="group" aria-label="Sub-section"><button class="chip ${!taSt.sub ? "on" : ""}" data-sub="">All</button>${TAS.map(s => `<button class="chip ${taSt.sub === s.k ? "on" : ""}" data-sub="${s.k}">${esc(s.n)}<span class="w">${V.filter(v => v.ta === s.i).length}</span></button>`).join("")}</div></div>
-      ${recs.length && taSt.sort === "foryou" ? `<h2 class="shelf">Most recommended by traders on Reddit</h2><div class="strip">${recs.map(v => card(v)).join("")}</div>` : ""}
+      ${recs.length && taSt.sort === "foryou" ? `<h2 class="shelf">Most recommended by traders</h2><div class="strip">${recs.map(v => card(v)).join("")}</div>` : ""}
       ${pls.length && taSt.sort === "foryou" ? `<h2 class="shelf">Playlists</h2><div class="strip">${pls.slice(0, 16).map(pcard).join("")}</div>` : ""}
       ${taSt.sort === "foryou" ? `<h2 class="shelf">Picked for you</h2>` : ""}<div class="grid" id="grid"></div>`;
     document.querySelectorAll("[data-sub]").forEach(b => b.onclick = () => { taSt.sub = b.dataset.sub; store.set("taSub", taSt.sub); draw(); });
@@ -556,11 +551,11 @@ function faPage(app) {
     const recs = list.filter(v => v.r).sort((a, b) => b.r - a.r).slice(0, 12);
     const pls = PL.filter(p => p.v.filter(v => v.fa && (!si || v.fa === si)).length >= Math.max(3, p.v.length / 2));
     app.innerHTML = `<h1 class="page">Financial analysis</h1>
-      <p class="lede">${faSt.sub ? esc(FA_BLURB[faSt.sub]) : "Equity investing from the fundamentals up, from the teachers and investors that people on r/ValueInvesting, r/SecurityAnalysis and r/CFA point to. The CFA® curriculum has its own section with all three levels."}</p>
-      <div class="filters"><div class="row"><select id="fasort" aria-label="Sort">${[["foryou", "For you"], ["recs", "Most recommended on Reddit"], ["views", "Most viewed"], ["new", "Newest"], ["short", "Shortest first"], ["long", "Longest first"]].map(([k, n]) => `<option value="${k}" ${faSt.sort === k ? "selected" : ""}>${n}</option>`).join("")}</select>
+      <p class="lede">${faSt.sub ? esc(FA_BLURB[faSt.sub]) : "Equity investing from the fundamentals up, from the teachers and investors that investors and CFA candidates recommend most. The CFA® curriculum has its own section with all three levels."}</p>
+      <div class="filters"><div class="row"><select id="fasort" aria-label="Sort">${[["foryou", "For you"], ["recs", "Most recommended"], ["views", "Most viewed"], ["new", "Newest"], ["short", "Shortest first"], ["long", "Longest first"]].map(([k, n]) => `<option value="${k}" ${faSt.sort === k ? "selected" : ""}>${n}</option>`).join("")}</select>
         <button class="btn pri" id="tvfa">TV mode: ${esc(faSt.sub ? FAS[si - 1].n : "Financial analysis")}</button><span class="count mono">${list.length.toLocaleString()} videos</span></div>
         <div class="chips" role="group" aria-label="Section"><button class="chip ${!faSt.sub ? "on" : ""}" data-fsub="">All</button>${FAS.map(s => `<button class="chip ${faSt.sub === s.k ? "on" : ""}" data-fsub="${s.k}">${esc(s.n)}<span class="w">${V.filter(v => v.fa === s.i).length}</span></button>`).join("")}<a class="chip" href="#/cfa">CFA® exam prep<span class="w">${V.filter(v => v.cfa).length}</span></a></div></div>
-      ${recs.length && faSt.sort === "foryou" ? `<h2 class="shelf">Most recommended on Reddit</h2><div class="strip">${recs.map(v => card(v)).join("")}</div>` : ""}
+      ${recs.length && faSt.sort === "foryou" ? `<h2 class="shelf">Most recommended</h2><div class="strip">${recs.map(v => card(v)).join("")}</div>` : ""}
       ${pls.length && faSt.sort === "foryou" ? `<h2 class="shelf">Playlists</h2><div class="strip">${pls.slice(0, 16).map(pcard).join("")}</div>` : ""}
       ${faSt.sort === "foryou" ? `<h2 class="shelf">Picked for you</h2>` : ""}<div class="grid" id="grid"></div>`;
     document.querySelectorAll("[data-fsub]").forEach(b => b.onclick = () => { faSt.sub = b.dataset.fsub; store.set("faSub", faSt.sub); draw(); });
@@ -582,7 +577,7 @@ function interviews(app, [kind]) {
     ctxQueue = () => list;
     const who = ivSt.fig ? FIG[ivSt.fig - 1].n : ivSt.kind === "investor" ? "Investor interviews" : "Trader interviews";
     app.innerHTML = `<p class="crumb"><a href="#/${ivSt.kind === "investor" ? "fa" : "ta"}">${ivSt.kind === "investor" ? "Financial analysis" : "Technical analysis"}</a> › Interviews</p><h1 class="page">${ivSt.kind === "investor" ? "Investor" : "Trader"} interviews</h1>
-      <p class="lede">Long-form interviews, talks and Q&amp;As with the investors and traders people keep pointing to on Reddit. Clips, reaction videos and "rules of" summaries are filtered out. Ranked by Reddit recommendations, then views.</p>
+      <p class="lede">Long-form interviews, talks and Q&amp;As with well-known investors and traders, ranked by how often they are recommended, then by views.</p>
       <div class="filters"><div class="row"><div class="seg" role="group" aria-label="Kind"><button data-kind="investor" class="${ivSt.kind === "investor" ? "on" : ""}">Investors</button><button data-kind="trader" class="${ivSt.kind === "trader" ? "on" : ""}">Traders</button></div>
         <button class="btn pri" id="tviv">TV mode: ${esc(who)}</button><span class="count mono">${list.length} interviews</span></div>
         <div class="chips" role="group" aria-label="Person"><button class="chip ${!ivSt.fig ? "on" : ""}" data-fig="0">Everyone</button>${figs.map(f => `<button class="chip ${ivSt.fig === f.i ? "on" : ""}" data-fig="${f.i}">${esc(f.n)}<span class="w">${f.n2}</span></button>`).join("")}</div></div>
@@ -600,7 +595,7 @@ function courses(app) {
     const tpi = st.topic ? TOP.find(t => t.k === st.topic).i : -1;
     const list = PL.filter(p => (!st.level || p.lv === st.level) && (tpi < 0 ? !p.only : true) && (tpi < 0 || p.tp === tpi || p.v.filter(v => v.tp === tpi).length >= Math.min(2, p.v.length)) &&(!st.hideHi || p.v.filter(v => v.hi).length < p.v.length / 2));
     ctxQueue = () => list.flatMap(p => p.v);
-    app.innerHTML = `<h1 class="page">Courses</h1><p class="lede">Complete playlists from CFA instructors, ordered by r/CFA recommendations. Play one start to finish in TV mode.</p>${filterBar(st)}<div class="grid" id="grid"></div>${list.length ? "" : `<div class="empty">No courses match these filters.</div>`}`;
+    app.innerHTML = `<h1 class="page">Courses</h1><p class="lede">Complete playlists from CFA instructors, ordered by how often they are recommended. Play one start to finish in TV mode.</p>${filterBar(st)}<div class="grid" id="grid"></div>${list.length ? "" : `<div class="empty">No courses match these filters.</div>`}`;
     $("#count").textContent = list.length + " courses";
     bindFilters(draw);
     paged($("#grid"), list, pcard);
@@ -614,7 +609,7 @@ function playlist(app, [id]) {
   ctxQueue = () => p.v;
   const tot = p.v.reduce((s, v) => s + (v.d || 0), 0);
   app.innerHTML = `<h1 class="page">${esc(p.t)}</h1>
-  <p class="lede"><a href="#/c/${p.c}"><b>${esc(CH[p.c].n)}</b></a> ${tierBadge(CH[p.c])} · <span class="mono">${p.v.length} videos · ${fmtDur(tot)} total</span>${p.r ? ` · recommended by ${p.r} on r/CFA` : ""}</p>
+  <p class="lede"><a href="#/c/${p.c}"><b>${esc(CH[p.c].n)}</b></a> ${tierBadge(CH[p.c])} · <span class="mono">${p.v.length} videos · ${fmtDur(tot)} total</span>${p.r ? ` · recommended by ${p.r} people` : ""}</p>
   <div class="btns" style="margin-bottom:20px"><a class="btn pri" href="#/watch/${p.v[0].id}/${p.id}">Play all</a><button class="btn" id="tvhere">Watch in TV mode</button><a class="btn" href="https://www.youtube.com/playlist?list=${p.id}" target="_blank" rel="noopener">Open on YouTube ↗</a></div>
   <div class="list" style="max-width:900px">${p.v.map((v, i) => rowItem(v, `#/watch/${v.id}/${p.id}`, false, i + 1)).join("")}</div>`;
   $("#tvhere").onclick = () => TV.open(p.v, 0, p.t);
@@ -622,16 +617,16 @@ function playlist(app, [id]) {
 
 function channels(app) {
   const order = ["S", "A", "B", "C", "R"];
-  const names = {S: "S", A: "A", B: "B", C: "C", R: "r/CFA<br>finds"};
+  const names = {S: "S", A: "A", B: "B", C: "C", R: "Community<br>finds"};
   const taCh = new Set(V.filter(v => v.only).map(v => v.c));
   const block = (title, lede, chs) => {
     const curated = chs.filter(c => c.tier !== "R"), finds = chs.filter(c => c.tier === "R").sort((a, b) => b.r - a.r).slice(0, 60);
-    return `<h2 class="shelf">${title}</h2><p class="lede">${lede}</p>` + order.map(t => { const cs = t === "R" ? finds : curated.filter(c => c.tier === t); return cs.length ? `<div class="tierrow"><div class="lab ${t}">${names[t].replace("r/CFA", "Reddit")}</div><div class="items">${cs.map(c => `<a class="chcard" href="#/c/${c.i}"><b>${esc(c.n)}</b><span class="mono">${c.nv} videos${c.subs ? " · " + fmtN(c.subs) + " subs" : ""}${c.r ? " · " + c.r + " Reddit recs" : ""}</span></a>`).join("")}</div></div>` : ""; }).join("");
+    return `<h2 class="shelf">${title}</h2><p class="lede">${lede}</p>` + order.map(t => { const cs = t === "R" ? finds : curated.filter(c => c.tier === t); return cs.length ? `<div class="tierrow"><div class="lab ${t}">${names[t]}</div><div class="items">${cs.map(c => `<a class="chcard" href="#/c/${c.i}"><b>${esc(c.n)}</b><span class="mono">${c.nv} videos${c.subs ? " · " + fmtN(c.subs) + " subs" : ""}${c.r ? " · " + c.r + " recommendations" : ""}</span></a>`).join("")}</div></div>` : ""; }).join("");
   };
   app.innerHTML = `<h1 class="page">Channel tier lists</h1>
-  <p class="lede">Tiers come from the data: how many Reddit users recommended the channel or its videos, its subscriber count, and how much on-topic material it has. Each list's last row holds channels outside the curated set that Reddit users linked to.</p>
-  ${block("Financial analysis", "Ranked with recommendations from r/CFA, r/ValueInvesting and r/SecurityAnalysis.", CH.filter(c => c.scope !== "ta" && !(c.tier === "R" && taCh.has(c.i))))}
-  ${block("Technical analysis", "Ranked with recommendations from r/CANSLIM, r/technicalanalysis, r/swingtrading, r/Wyckoff and r/VSA.", CH.filter(c => c.scope === "ta" || (c.tier === "R" && taCh.has(c.i))))}`;
+  <p class="lede">Tiers come from the data: how often the channel and its videos are recommended, its subscriber count, and how much on-topic material it has. Each list's last row holds well-recommended channels outside the curated set.</p>
+  ${block("Financial analysis", "Ranked by recommendations, subscribers and depth of content.", CH.filter(c => c.scope !== "ta" && !(c.tier === "R" && taCh.has(c.i))))}
+  ${block("Technical analysis", "Ranked by recommendations, subscribers and depth of content.", CH.filter(c => c.scope === "ta" || (c.tier === "R" && taCh.has(c.i))))}`;
 }
 
 function channel(app, [ci]) {
@@ -641,7 +636,7 @@ function channel(app, [ci]) {
   const pls = PL.filter(p => p.c === c.i);
   ctxQueue = () => vids;
   app.innerHTML = `<div class="chhead"><div class="av">${esc(c.n[0])}</div><div><h1 class="page" style="margin:0">${esc(c.n)} ${tierBadge(c)}</h1>
-    <div class="sub mono">${c.h ? esc(c.h) + " · " : ""}${c.subs ? fmtN(c.subs) + " subscribers · " : ""}${vids.length} videos here${c.r ? " · " + c.r + " r/CFA recommenders" : ""}</div></div>
+    <div class="sub mono">${c.h ? esc(c.h) + " · " : ""}${c.subs ? fmtN(c.subs) + " subscribers · " : ""}${vids.length} videos here${c.r ? " · " + c.r + " recommendations" : ""}</div></div>
     <div class="btns"><button class="btn pri" id="tvhere">Watch in TV mode</button><a class="btn" href="https://www.youtube.com/channel/${c.id}" target="_blank" rel="noopener">Open on YouTube ↗</a></div></div>
     ${pls.length ? `<h2 class="shelf">Courses</h2><div class="strip">${pls.map(pcard).join("")}</div>` : ""}
     <h2 class="shelf">Videos</h2><div class="grid" id="grid"></div>`;
@@ -674,7 +669,6 @@ function watch(app, [id, plid]) {
     side = `<div class="autoplay"><h4>Up next</h4><label class="tog"><input type="checkbox" id="ap" ${autoplay ? "checked" : ""}> Autoplay</label></div><div class="list">${rel.map(x => rowItem(x, "#/watch/" + x.id)).join("")}</div>`;
   }
   ctxQueue = () => p ? p.v.slice(p.v.indexOf(v)) : [v, ...related(v, 60)];
-  const qs = D.quotes[v.id] || [];
   const isSaved = saved.includes(v.id);
   app.innerHTML = `<div class="watch"><div style="min-width:0">
     <div class="player"><div id="yt"></div></div>
@@ -682,7 +676,6 @@ function watch(app, [id, plid]) {
     <div class="wbar"><a class="chrow" href="#/c/${c.i}"><div class="av">${esc(c.n[0])}</div><div><div class="chname">${esc(c.n)} ${tierBadge(c)}</div><div class="sub mono">${c.subs ? fmtN(c.subs) + " subscribers" : ""}</div></div></a>
       <div class="btns"><button class="btn" id="save">${isSaved ? "Saved" : "Save"}</button><button class="btn" id="tvhere">TV mode from here</button><a class="btn" href="https://www.youtube.com/watch?v=${v.id}" target="_blank" rel="noopener">YouTube ↗</a></div></div>
     <div class="panel"><div class="sub mono">${[v.v ? fmtN(v.v) + " views" : "", ago(v.ts), fmtDur(v.d)].filter(Boolean).join(" · ")}</div><div class="tags" style="margin-top:8px">${tags(v)}</div></div>
-    ${qs.length ? `<div class="panel"><h4>What r/CFA said about it</h4>${qs.map(q => `<blockquote class="quote">“${esc(q[0])}”<a href="${esc(q[1])}" target="_blank" rel="noopener">${q[2] != null ? q[2] + " points · " : ""}view on Reddit ↗</a></blockquote>`).join("")}</div>` : ""}
   </div><aside style="min-width:0">${side}</aside></div>`;
   $("#save").onclick = e => { toggleSave(v.id); e.target.textContent = saved.includes(v.id) ? "Saved" : "Save"; };
   $("#tvhere").onclick = () => TV.open(ctxQueue(), 0, p ? p.t : "From " + v.t.slice(0, 40));
@@ -825,7 +818,7 @@ const TV = {
     const v = this.cur(), n = this.q[this.k + 1];
     $("#tvch").innerHTML = this.chLabel();
     $("#tvtitle").textContent = v.t;
-    $("#tvsub").innerHTML = `${esc(CH[v.c].n)} · <span class="mono">${fmtDur(v.d)}</span> · ${this.k + 1} of ${this.q.length}${v.r ? ` · recommended by ${v.rc || v.r} on ${v.rc ? "r/CFA" : "Reddit"}` : ""}${saved.includes(v.id) ? " · Saved" : ""}`;
+    $("#tvsub").innerHTML = `${esc(CH[v.c].n)} · <span class="mono">${fmtDur(v.d)}</span> · ${this.k + 1} of ${this.q.length}${v.r ? ` · recommended by ${v.r} people` : ""}${saved.includes(v.id) ? " · Saved" : ""}`;
     $("#tvnext").textContent = n ? "Up next: " + n.t : "";
   },
   ui() { const t = $("#tv"); t.classList.add("ui"); clearTimeout(this.uiT); this.uiT = setTimeout(() => t.classList.remove("ui"), 3200); },

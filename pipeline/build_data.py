@@ -159,7 +159,7 @@ def load_reddit():
             else:
                 url = f"https://www.reddit.com{r['permalink']}" if r.get("permalink") else f"https://www.reddit.com/r/{r['sub']}/comments/{r['id']}/"
             for v in r["videos"]:
-                mentions[v].append({"sub": r["sub"], "who": who, "score": r.get("score") or 0, "ts": r.get("ts"), "text": r["text"], "url": url})
+                mentions[v].append({"sub": r["sub"], "who": who, "score": r.get("score") or 0, "ts": r.get("ts"), "text": r.get("text") or "", "url": url})
             for c in r["channels"]:
                 ch_mentions[c.lower()].add(who)
             for p in r["playlists"]:
@@ -393,7 +393,7 @@ def main():
     vidx = {v["id"]: i for i, v in enumerate(out_videos)}
     rows = [[v["id"], v["t"], remap[v["c"]], int(v["d"] or 0), int(v["views"] or 0), int(v["ts"] or 0),
              v["lv"], tkeys.index(v["tp"]), v["r"], v["hi"], v["ta"], v["only"], v["fig"], v["rc"], v["fa"], v["cfa"]] for v in out_videos]
-    quotes = {v["id"]: v["q"] for v in out_videos if v["q"]}
+    quotes = {} if VARIANT == "public" else {v["id"]: v["q"] for v in out_videos if v["q"]}
 
     pls_out = []
     for p in playlists:
@@ -417,9 +417,9 @@ def main():
             "figures": [[f[0], f[1]] for f in FIGURES],
             "fa_subs": [[t[0], t[1]] for t in FA_SUBS],
             "channels": new_channels, "videos": rows, "playlists": pls_out, "quotes": quotes,
-            "fields": {"videos": ["id", "title", "channel", "duration", "views", "timestamp", "level", "topic", "reddit_recommenders", "hindi", "ta_subtopic", "ta_only", "figure", "rcfa_recommenders", "fa_section", "in_cfa"],
-                       "channels": ["id", "name", "handle", "subscribers", "tier", "scope", "reddit_recommenders", "videos"],
-                       "playlists": ["id", "title", "channel", "level", "topic", "reddit_recommenders", "video_indexes", "ta_subtopic"]}}
+            "fields": {"videos": ["id", "title", "channel", "duration", "views", "timestamp", "level", "topic", "recommenders", "hindi", "ta_subtopic", "ta_only", "figure", "cfa_recommenders", "fa_section", "in_cfa"],
+                       "channels": ["id", "name", "handle", "subscribers", "tier", "scope", "recommenders", "videos"],
+                       "playlists": ["id", "title", "channel", "level", "topic", "recommenders", "video_indexes", "ta_subtopic"]}}
     SITE.mkdir(exist_ok=True)
     (SITE / "videos.json").write_text(json.dumps(data, separators=(",", ":"), ensure_ascii=False))
     lv = Counter(r[6] for r in rows)
